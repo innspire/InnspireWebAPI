@@ -24,12 +24,12 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          tags: ghcr.io/innspire/${{ env.SERVICE }}:${{ env.GITHUB_SHA }}
+          tags: ghcr.io/innspire/${{ env.SERVICE }}:$GITHUB_SHA
           push: true
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: ghcr.io/innspire/${{ env.SERVICE }}:{{ env.GITHUB_SHA }}
+          image-ref: ghcr.io/innspire/${{ env.SERVICE }}:$GITHUB_SHA
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
