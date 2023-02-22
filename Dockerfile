@@ -17,6 +17,8 @@ FROM build AS publish
 RUN dotnet publish "InnspireWebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+RUN addgroup -S netcore && adduser -S netcore -G netcore
+USER netcore
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "InnspireWebAPI.dll"]
