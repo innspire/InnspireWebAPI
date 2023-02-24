@@ -1,9 +1,11 @@
 using InnspireWebAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
-
+InternalConfigurationsManager.Create(builder.Configuration);
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -16,16 +18,26 @@ builder.Services.AddHealthChecks()
 
 builder.Services.AddScoped<IInnspireAuthorizationService, AuthorizationService>();
 
-var jwtSecret = 
-
 builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(opt =>
 {
-
+    opt.SaveToken = true;
+    opt.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = InternalConfigurationsManager.Instance!.ApiUrl,
+        ValidAudience = InternalConfigurationsManager.Instance!.ApiHostname,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(InternalConfigurationsManager.Instance!.JwtKey))
+    };
 });
+
+builder.Services.AddSingleton<JwtService>();
 
 var app = builder.Build();
 
