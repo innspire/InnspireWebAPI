@@ -2,7 +2,7 @@ name: docker-build-main
 env:
   SERVICE: innspirewebapi
 on:
-  push:
+  pull_request:
     branches: [ "main" ]
 jobs:
   build:
@@ -10,7 +10,6 @@ jobs:
     permissions:
       packages: write
       contents: read
-      security-events: write
     steps:
       - name: Checkout 
         uses: actions/checkout@v3
@@ -25,17 +24,13 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
-          tags: ghcr.io/innspire/${{ env.SERVICE }}:latest
+          tags: ghcr.io/innspire/${{ env.SERVICE }}:${{ github.sha }}
           push: true
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@7b7aa264d83dc58691451798b4d117d53d21edfe
         with:
-          image-ref: ghcr.io/innspire/${{ env.SERVICE }}:latest
+          image-ref: ghcr.io/innspire/${{ env.SERVICE }}:${{ github.sha }}
           format: 'template'
           template: '@/contrib/sarif.tpl'
           output: 'trivy-results.sarif'
           severity: 'CRITICAL,HIGH'
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: 'trivy-results.sarif'
