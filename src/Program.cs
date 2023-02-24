@@ -1,4 +1,5 @@
 using InnspireWebAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,17 @@ builder.Services.AddHealthChecks()
     .AddCheck<BasicHealthCheck>("Base");
 
 builder.Services.AddScoped<IInnspireAuthorizationService, AuthorizationService>();
+
+var jwtSecret = 
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(opt =>
+{
+
+});
 
 var app = builder.Build();
 
