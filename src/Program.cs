@@ -1,4 +1,5 @@
 using InnspireWebAPI.Entities;
+using InnspireWebAPI.Entities.Authentication;
 using InnspireWebAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +18,23 @@ if (builder.Environment.IsDevelopment())
     {
         opt.UseSqlite("Data Source=local_dev.db");
     }); 
+}
+else
+{
+    var pgUri = Environment.GetEnvironmentVariable("POSTGRES_URI");
+    if (string.IsNullOrEmpty(pgUri))
+    {
+        using var loggerFactory = LoggerFactory.Create(loggingBuilder => loggingBuilder
+    .SetMinimumLevel(LogLevel.Trace)
+    .AddConsole());
+
+        ILogger logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError("Postgres URI was not supplied. App cannot start without it seached with name 'POSTGRES_URI'");
+        return;
+    }
+    builder.Services.AddDbContext<InnspireDbContext>(opt => {
+        opt.UseNpgsql(pgUri);
+    });
 }
 
 builder.Services.AddControllers();

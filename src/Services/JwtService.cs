@@ -1,5 +1,5 @@
 ﻿using InnspireWebAPI.DataTransferObjects.User;
-using InnspireWebAPI.Entities;
+using InnspireWebAPI.Entities.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
