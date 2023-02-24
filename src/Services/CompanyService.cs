@@ -8,9 +8,9 @@ namespace InnspireWebAPI.Services
 {
     public class CompanyService : ICompanyService
     {
-        private readonly IAuthorizationService authorizationService;
+        private readonly IInnspireAuthorizationService authorizationService;
 
-        public CompanyService(IAuthorizationService authorizationService)
+        public CompanyService(IInnspireAuthorizationService authorizationService)
         {
             this.authorizationService = authorizationService;
         }

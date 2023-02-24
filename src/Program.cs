@@ -1,3 +1,4 @@
+using InnspireWebAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IAuthorizationService, DefaultAuthorizationService>();
+builder.Services.AddHealthChecks()
+    .AddCheck<BasicHealthCheck>("Base");
+
+builder.Services.AddScoped<IInnspireAuthorizationService, AuthorizationService>();
 
 var app = builder.Build();
 
@@ -25,5 +29,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseHealthServer();
+
+MetricsHelper.ActivateExporting();
 
 app.Run();

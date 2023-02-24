@@ -14,7 +14,7 @@
 
         public static ValueResult<TValue> AccessDenied()
         {
-
+            return new ValueResult<TValue>(default, false); 
         }
     }
 }

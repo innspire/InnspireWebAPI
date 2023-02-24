@@ -2,7 +2,7 @@
 
 namespace InnspireWebAPI.Services
 {
-    public interface IAuthorizationService
+    public interface IInnspireAuthorizationService
     {
         bool CanCreateCompanies(IPrincipal principal);
     }
