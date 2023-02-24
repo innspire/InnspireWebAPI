@@ -1,4 +1,6 @@
-﻿namespace InnspireWebAPI.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace InnspireWebAPI.Entities
 {
     /// <summary>
     /// A company can manage different Hotel Chains
@@ -62,4 +64,15 @@
     {
 
     }
+
+    public class InnspireUser : IdentityUser<string>
+    {
+
+    }
+
+    public class InnspireRole : IdentityRole<string>
+    {
+
+    }
+
 }
