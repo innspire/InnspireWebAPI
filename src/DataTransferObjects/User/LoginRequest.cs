@@ -1,15 +1,13 @@
-﻿namespace InnspireWebAPI.DataTransferObjects.User
+﻿namespace InnspireWebAPI.DataTransferObjects.User;
+
+public record LoginRequest(string UserName, string Password)
 {
-    public class LoginRequest
-    {
-        public string UserName { get; set; }
+}
 
-        public string Password { get; set; }
+public record LoginResponse(bool Success, LoginSuccessResponse? Result)
+{
+}
 
-        public LoginRequest(string userName, string password)
-        {
-            UserName = userName;
-            Password = password;
-        }
-    }
+public record LoginSuccessResponse(string Username, string FirstName, string LastName, string Token)
+{
 }

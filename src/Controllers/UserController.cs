@@ -29,10 +29,13 @@ namespace InnspireWebAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
-        public async Task<string> Login([FromServices]JwtService jwtService, [FromBody]LoginRequest login)
+        public async Task<LoginResponse> Login([FromServices]JwtService jwtService, [FromBody]LoginRequest login)
         {
             var token = await jwtService.Authenticate(login);
-            return token ?? "error";
+            if (token == null)
+                return new LoginResponse(false, null);
+            else
+                return new LoginResponse(true, token);
         }
 
         [AllowAnonymous]

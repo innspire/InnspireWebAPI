@@ -1,4 +1,6 @@
 ﻿using InnspireWebAPI.Entities.Authentication;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
 namespace InnspireWebAPI.Entities.Infrastructure
@@ -40,16 +42,21 @@ namespace InnspireWebAPI.Entities.Infrastructure
 
     public sealed class CompanyUser
     {
-        public Company Company { get; set; }
+        public string CompanyId { get; set; }
+        public string UserId { get; set; }
 
-        public InnspireUser User { get; set; }
+        [ForeignKey(nameof(CompanyId))]
+        public Company? Company { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public InnspireUser? User { get; set; }
 
         public CompanyRole? Role { get; set; }
 
-        public CompanyUser(Company company, InnspireUser user)
+        public CompanyUser(string companyId, string userId)
         {
-            this.Company = company;
-            this.User = user;
+            this.CompanyId = companyId;
+            this.UserId = userId;
         }
     }
 
@@ -57,13 +64,15 @@ namespace InnspireWebAPI.Entities.Infrastructure
     {
         public string CompanyRoleId { get; set; }
 
-        public Company Company { get; set; }
+        public string CompanyId { get; set; }
+
+        public Company? Company { get; set; }
 
 
-        public CompanyRole(Company company)
+        public CompanyRole(string companyId)
         {
             this.CompanyRoleId= Guid.NewGuid().ToString();
-            this.Company = company;
+            this.CompanyId= companyId;
         }
     }
 
@@ -119,22 +128,39 @@ namespace InnspireWebAPI.Entities.Infrastructure
 
     public sealed class RoomCateogryConfiguration
     {
-        public Room Room { get; set; }
+        [Key]
+        public string RoomCategoryConfigurationId { get; set; }
 
-        public RoomCategory RoomCategory { get; set; }
+        public string RoomId { get; set; }
+        public string CategoryId { get; set; }
 
-        public RoomCateogryConfiguration(Room room, RoomCategory roomCategory)
+
+        [ForeignKey(nameof(RoomId))]
+        public Room? Room { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public RoomCategory? RoomCategory { get; set; }
+
+        public RoomCateogryConfiguration(string roomId, string categoryId)
         {
-            this.Room = room;
-            this.RoomCategory = roomCategory;
+            this.RoomCategoryConfigurationId = Guid.NewGuid().ToString();
+            this.RoomId = roomId;
+            this.CategoryId = categoryId;
         }
+
     }
 
     public sealed class RoomCategoryFeature
     {
-        public RoomCateogryConfiguration RoomCategoryConfiguration { get; set; }
+        public string ConfigurationId { get; set; }
 
-        public Feature Feature { get; set; }
+        public string FeatureId { get; set; }
+
+        [ForeignKey(nameof(ConfigurationId))]
+        public RoomCateogryConfiguration? RoomCategoryConfiguration { get; set; }
+
+        [ForeignKey(nameof(FeatureId))]
+        public Feature? Feature { get; set; }
 
         public bool IsAvailable { get; set; }
 
@@ -143,18 +169,17 @@ namespace InnspireWebAPI.Entities.Infrastructure
         public decimal? Price { get; set; }
 
 
-        public RoomCategoryFeature(RoomCateogryConfiguration roomCateogryConfiguration, Feature feature)
+        public RoomCategoryFeature(string configurationId, string featureId)
         {
-            RoomCategoryConfiguration = roomCateogryConfiguration;
-            Feature = feature;
+            this.ConfigurationId = configurationId;
+            this.FeatureId = featureId;
         }
+
     }
 
     public sealed class Feature
     {
         public string FeatureId { get; set; }
-
-
 
         public Feature()
         {

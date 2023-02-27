@@ -1,4 +1,4 @@
-﻿using InnspireWebAPI.Entities;
+﻿using InnspireWebAPI.Entities.Infrastructure;
 using InnspireWebAPI.Util;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Security.Claims;

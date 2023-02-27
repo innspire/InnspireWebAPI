@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InnspireWebAPI.Entities
 {
-    public class InnspireDbContext : IdentityDbContext<InnspireUser, InnspireRole, string>
+    public class InnspireDbContext : IdentityDbContext<InnspireUser, InnspireRole, string, InnspireUserClaim, InnspireUserRole, InnspireUserLogin, InnspireRoleClaim, InnspireUserToken >
     {
         public DbSet<Company> Companies => Set<Company>();
 
@@ -19,6 +19,8 @@ namespace InnspireWebAPI.Entities
 
         public DbSet<RoomCateogryConfiguration> RoomCateogryConfigurations=> Set<RoomCateogryConfiguration>();
 
+        public DbSet<CompanyUser> CompanyUsers => Set<CompanyUser>();
+
         public InnspireDbContext(DbContextOptions<InnspireDbContext> options) : base(options)
         {
 
@@ -26,23 +28,34 @@ namespace InnspireWebAPI.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<RoomCateogryConfiguration>().HasKey(n => new
-            {
-                n.Room,
-                n.RoomCategory
-            });
 
             modelBuilder.Entity<RoomCategoryFeature>().HasKey(n => new
             {
-                n.RoomCategoryConfiguration,
-                n.Feature
+                n.ConfigurationId,
+                n.FeatureId
             });
 
             modelBuilder.Entity<CompanyUser>().HasKey(n => new
             {
-                n.Company,
-                n.User
+                n.CompanyId,
+                n.UserId
             });
+
+            modelBuilder.Entity<InnspireUserLogin>().HasKey(n => new
+            {
+                n.UserId,
+                n.LoginProvider,
+                n.ProviderKey,
+                n.Timestamp
+            });
+
+            modelBuilder.Entity<InnspireUserRole>().HasKey(n => new
+            {
+                n.UserId,
+                n.RoleId
+            });
+
+            modelBuilder.Entity<InnspireUserToken>().HasKey(n => n.Value);
         }
     }
 }

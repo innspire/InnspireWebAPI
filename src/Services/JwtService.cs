@@ -13,7 +13,7 @@ namespace InnspireWebAPI.Services
         private readonly SignInManager<InnspireUser> signInManager;
         private readonly UserManager<InnspireUser> userManager;
 
-        public async Task<string?> Authenticate(LoginRequest login)
+        public async Task<LoginSuccessResponse?> Authenticate(LoginRequest login)
         {
             var user = await userManager.FindByNameAsync(login.UserName);
             if (user == null)
@@ -36,7 +36,7 @@ namespace InnspireWebAPI.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var myToken = tokenHandler.WriteToken(token);
-            return myToken;
+            return new LoginSuccessResponse(user.UserName!, "", "", myToken);
         }
 
         public JwtService(SignInManager<InnspireUser> signInManager, UserManager<InnspireUser> userManager)
